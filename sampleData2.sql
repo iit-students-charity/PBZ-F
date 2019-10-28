@@ -1,0 +1,45 @@
+INSERT INTO producer(id, name, status, city) VALUES ('П1', 'Петров', 20, 'Москва');
+INSERT INTO producer(id, name, status, city) VALUES ('П2', 'Синицын', 10, 'Таллин');
+INSERT INTO producer(id, name, status, city) VALUES ('П3', 'Федоров', 30, 'Таллин');
+INSERT INTO producer(id, name, status, city) VALUES ('П4', 'Чаянов', 20, 'Минск');
+INSERT INTO producer(id, name, status, city) VALUES ('П5', 'Крюков', 30, 'Киев');
+
+INSERT INTO part(id, name, color, size, city) VALUES ('Д1', 'Болт', 'Красный', 12, 'Москва');
+INSERT INTO part(id, name, color, size, city) VALUES ('Д2', 'Гайка', 'Зеленая', 17, 'Минск');
+INSERT INTO part(id, name, color, size, city) VALUES ('Д3', 'Диск', 'Черный', 17, 'Вильнюс');
+INSERT INTO part(id, name, color, size, city) VALUES ('Д4', 'Диск', 'Черный', 14, 'Москва');
+INSERT INTO part(id, name, color, size, city) VALUES ('Д5', 'Корпус', 'Красный', 12, 'Минск');
+INSERT INTO part(id, name, color, size, city) VALUES ('Д6', 'Крышки', 'Красный', 19, 'Москва');
+
+INSERT INTO project(id, name, city) VALUES ('ПР1', 'ИПР1', 'Минск');
+INSERT INTO project(id, name, city) VALUES ('ПР2', 'ИПР2', 'Таллин');
+INSERT INTO project(id, name, city) VALUES ('ПР3', 'ИПР3', 'Псков');
+INSERT INTO project(id, name, city) VALUES ('ПР4', 'ИПР4', 'Псков');
+INSERT INTO project(id, name, city) VALUES ('ПР5', 'ИПР5', 'Москва');
+INSERT INTO project(id, name, city) VALUES ('ПР6', 'ИПР6', 'Саратов');
+INSERT INTO project(id, name, city) VALUES ('ПР7', 'ИПР7', 'Москва');
+
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (1, 'П1', 'Д1', 'ПР1', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (2, 'П1', 'Д1', 'ПР2', 700);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (3, 'П2', 'Д3', 'ПР1', 400);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (4, 'П2', 'Д2', 'ПР2', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (5, 'П2', 'Д3', 'ПР3', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (6, 'П2', 'Д3', 'ПР4', 500);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (7, 'П2', 'Д3', 'ПР5', 600);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (8, 'П2', 'Д3', 'ПР6', 400);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (9, 'П2', 'Д3', 'ПР7', 800);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (10, 'П2', 'Д5', 'ПР2', 100);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (11, 'П3', 'Д3', 'ПР1', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (12, 'П3', 'Д4', 'ПР2', 500);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (13, 'П4', 'Д6', 'ПР3', 300);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (14, 'П4', 'Д6', 'ПР7', 300);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (15, 'П5', 'Д2', 'ПР2', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (16, 'П5', 'Д2', 'ПР4', 100);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (17, 'П5', 'Д5', 'ПР5', 500);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (18, 'П5', 'Д5', 'ПР7', 100);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (19, 'П5', 'Д6', 'ПР2', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (20, 'П5', 'Д1', 'ПР2', 100);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (21, 'П5', 'Д3', 'ПР4', 200);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (22, 'П5', 'Д4', 'ПР4', 800);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (23, 'П5', 'Д5', 'ПР4', 400);
+INSERT INTO producer_project_part_number(id, supplierId, detailId, projectId, quantity) VALUES (24, 'П5', 'Д6', 'ПР4', 500);
