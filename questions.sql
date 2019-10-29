@@ -87,6 +87,23 @@ SELECT sum(size) FROM student_group WHERE (specialty = 'ЭВМ');
 SELECT DISTINCT personal_number FROM teacher_student_group INNER JOIN student_group ON
     (teacher_student_group.group_number = student_group.code) WHERE (specialty = 'ЭВМ');
 -- 13
-SELECT count(s1.subject_number) FROM teacher_student_group as s1 INNER JOIN teacher_student_group as s2 ON
-    (s1.subject_number = s2.subject_number) WHERE (s1.subject_number = '12П');
+SELECT subject_schedule.code FROM (SELECT subject.code, count(*) as gr_count FROM subject INNER JOIN teacher_student_group ON
+        (subject.code = teacher_student_group.subject_number) GROUP BY subject.code) as subject_schedule
+                WHERE gr_count = (SELECT count(*) FROM student_group);
 -- 14
+SELECT DISTINCT personal_number FROM (SELECT DISTINCT subject_number FROM teacher_student_group WHERE 
+        personal_number = (SELECT DISTINCT teacher.personal_number FROM teacher INNER JOIN 
+                teacher_student_group ON teacher.personal_number = teacher_student_group.personal_number
+                        WHERE subject_number = '14П')) AS teachers INNER JOIN teacher_student_group ON 
+                                teachers.subject_number = teacher_student_group.subject_number WHERE teacher_student_group.personal_number != '221Л';
+                                -- Find out way to remember 221Jl teacher selection
+-- 15
+SELECT DISTINCT subject.* FROM subject INNER JOIN teacher_student_group tsg ON 
+        subject.code = tsg.subject_number WHERE tsg.subject_number NOT IN (SELECT subject.code FROM subject
+                INNER JOIN teacher_student_group ON subject.code = teacher_student_group.subject_number WHERE personal_number = '221Л');
+-- 16
+SELECT subject.* FROM subject INNER JOIN (SELECT DISTINCT tsg.subject_number FROM student_group INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
+        WHERE group_number = (SELECT code FROM student_group WHERE name = 'М-6')) as what ON subject.code != what.subject_number GROUP BY subject.code;
+
+-- SELECT DISTINCT tsg.subject_number FROM student_group INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
+--         WHERE group_number = (SELECT code FROM student_group WHERE name = 'М-6');
