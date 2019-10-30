@@ -91,19 +91,32 @@ SELECT subject_schedule.code FROM (SELECT subject.code, count(*) as gr_count FRO
         (subject.code = teacher_student_group.subject_number) GROUP BY subject.code) as subject_schedule
                 WHERE gr_count = (SELECT count(*) FROM student_group);
 -- 14
-SELECT DISTINCT personal_number FROM (SELECT DISTINCT subject_number FROM teacher_student_group WHERE 
-        personal_number = (SELECT DISTINCT teacher.personal_number FROM teacher INNER JOIN 
+CREATE VIEW v1 AS SELECT DISTINCT teacher.personal_number FROM teacher INNER JOIN 
                 teacher_student_group ON teacher.personal_number = teacher_student_group.personal_number
-                        WHERE subject_number = '14П')) AS teachers INNER JOIN teacher_student_group ON 
-                                teachers.subject_number = teacher_student_group.subject_number WHERE teacher_student_group.personal_number != '221Л';
-                                -- Find out way to remember 221Jl teacher selection
+                        WHERE subject_number = '14П';
+-- Should be refactored
+SELECT DISTINCT personal_number FROM (SELECT DISTINCT subject_number FROM teacher_student_group WHERE 
+        personal_number = (SELECT * FROM v1)) AS teachers INNER JOIN teacher_student_group ON 
+                                teachers.subject_number = teacher_student_group.subject_number WHERE 
+                                        teacher_student_group.personal_number NOT IN (SELECT * FROM v1);
 -- 15
 SELECT DISTINCT subject.* FROM subject INNER JOIN teacher_student_group tsg ON 
         subject.code = tsg.subject_number WHERE tsg.subject_number NOT IN (SELECT subject.code FROM subject
                 INNER JOIN teacher_student_group ON subject.code = teacher_student_group.subject_number WHERE personal_number = '221Л');
 -- 16
-SELECT subject.* FROM subject INNER JOIN (SELECT DISTINCT tsg.subject_number FROM student_group INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
-        WHERE group_number = (SELECT code FROM student_group WHERE name = 'М-6')) as what ON subject.code != what.subject_number GROUP BY subject.code;
-
--- SELECT DISTINCT tsg.subject_number FROM student_group INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
---         WHERE group_number = (SELECT code FROM student_group WHERE name = 'М-6');
+SELECT * FROM subject WHERE subject.code NOT IN (SELECT DISTINCT tsg.subject_number FROM student_group 
+        INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
+                WHERE group_number = (SELECT code FROM student_group WHERE name = 'М-6'));
+-- 17
+SELECT first FROM (SELECT DISTINCT personal_number as first FROM teacher_student_group WHERE group_number = '3Г') three_g_teachers INNER JOIN 
+        (SELECT DISTINCT personal_number as second FROM teacher_student_group WHERE group_number = '8Г') 
+                eight_g_teachers ON three_g_teachers.first = eight_g_teachers.second
+                        WHERE first IN (SELECT personal_number FROM teacher WHERE position = 'Доцент');
+                        -- Refactor
+-- 18
+SELECT subject_number,
+       personal_number,
+       group_number FROM teacher_student_group WHERE personal_number IN (SELECT personal_number FROM teacher WHERE department = 'ЭВМ' AND specialty LIKE '%АСОИ%');
+-- 19
+SELECT student_group.code, teacher.personal_number FROM teacher INNER JOIN student_group ON teacher.specialty LIKE (SELECT concat('%', student_group.specialty, '%'));
+-- 20
