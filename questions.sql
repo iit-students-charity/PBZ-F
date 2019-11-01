@@ -1,65 +1,11 @@
--- -- 1
--- SELECT * FROM teacher;
--- -- 2
--- SELECT * FROM student_group WHERE (specialty = 'ЭВМ');
--- -- 3
--- SELECT (personal_number, auditorium) FROM teacher_student_group WHERE (subject_number = '18П');
--- -- 4
--- SELECT (subject.code, subject.name) FROM
---   subject INNER JOIN teacher_student_group ON (subject.code = teacher_student_group.subject_number)
---   WHERE (personal_number = (SELECT personal_number FROM teacher WHERE (surname = 'Костин')));
--- -- 5
--- SELECT (student_group.code) FROM student_group INNER JOIN teacher_student_group ON
---   (student_group.code = teacher_student_group.group_number) WHERE
---   (personal_number = (SELECT personal_number FROM teacher WHERE (surname = 'Фролов')));
--- -- 6
--- SELECT * FROM subject WHERE (specialty = 'АСОИ');
--- -- 7
--- SELECT teacher.*,
---        teacher_student_group.group_number,
---        teacher_student_group.subject_number,
---        teacher_student_group.auditorium
---   FROM teacher
---          INNER JOIN teacher_student_group
---                     ON (teacher.personal_number = teacher_student_group.personal_number)
---   WHERE specialty LIKE '%АСОИ%';
--- -- 8
--- SELECT DISTINCT teacher.surname FROM teacher INNER JOIN teacher_student_group
---   ON teacher.personal_number = teacher_student_group.personal_number
---   WHERE auditorium = 210;
--- -- 9
--- SELECT DISTINCT subject.name, group_schedule.name FROM subject INNER JOIN (SELECT
---         student_group.name, teacher_student_group.subject_number FROM student_group INNER JOIN
---         teacher_student_group ON (student_group.code = teacher_student_group.group_number)
---         WHERE (auditorium >= 100) AND (auditorium <=200)) AS group_schedule ON (subject.code = group_schedule.subject_number);
--- -- 10
--- SELECT DISTINCT f.name AS first_group, s.name AS second_group FROM student_group f INNER JOIN student_group s
---     ON f.specialty = s.specialty WHERE f.code != s.code;
--- -- 11
--- SELECT sum(size) FROM student_group WHERE specialty = 'ЭВМ';
--- -- 12
--- SELECT DISTINCT teacher_student_group.personal_number FROM student_group INNER JOIN teacher_student_group ON
---     (student_group.code = teacher_student_group.group_number) WHERE (student_group.specialty = 'ЭВМ');
--- -- 13
--- SELECT subject_number FROM teacher_student_group WHERE (SELECT COUNT(*) FROM teacher_student_group WHERE (subject_number = (SELECT code FROM subject)) = 6);
--- -- 14
--- SELECT DISTINCT surname FROM teacher INNER JOIN teacher_student_group tsg ON
---     (teacher.personal_number = tsg.personal_number) WHERE tsg.subject_number IN (SELECT subject.code FROM subject INNER JOIN
---     teacher_student_group tsg ON (subject.code = tsg.subject_number) WHERE tsg.personal_number IN (SELECT teacher.personal_number FROM
---       teacher INNER JOIN teacher_student_group tsg ON (teacher.personal_number = tsg.personal_number) WHERE tsg.subject_number = '14П'));
--- -- 15
--- SELECT * FROM subject INNER JOIN teacher_student_group tsg ON (subject.code = tsg.subject_number) WHERE
---     subject.code != (SELECT subject.code FROM subject INNER JOIN
---       teacher_student_group tsg ON (subject.code = tsg.subject_number) WHERE (tsg.personal_number = '221Л'));
-
 -- 1
 SELECT * FROM teacher;
 -- 2
 SELECT * FROM student_group WHERE (specialty = 'ЭВМ');
 -- 3
-SELECT (personal_number, auditorium) FROM teacher_student_group WHERE (subject_number = '18П');
+SELECT DISTINCT (personal_number, auditorium) FROM teacher_student_group WHERE (subject_number = '18П');
 -- 4
-SELECT (subject_number, subject.name) FROM subject INNER JOIN teacher_student_group ON 
+SELECT DISTINCT (subject_number, subject.name) FROM subject INNER JOIN teacher_student_group ON 
     (subject.code = teacher_student_group.subject_number) WHERE
         (personal_number = (SELECT personal_number FROM teacher WHERE (surname = 'Костин')));
 -- 5
@@ -120,3 +66,31 @@ SELECT subject_number,
 -- 19
 SELECT student_group.code, teacher.personal_number FROM teacher INNER JOIN student_group ON teacher.specialty LIKE (SELECT concat('%', student_group.specialty, '%'));
 -- 20
+SELECT DISTINCT tsg.personal_number FROM (SELECT personal_number FROM teacher WHERE specialty LIKE '%ЭВМ%') as evm 
+        INNER JOIN teacher_student_group tsg ON evm.personal_number = tsg.personal_number WHERE
+                subject_number IN (SELECT subject.code FROM student_group INNER JOIN subject ON subject.specialty = student_group.specialty);
+-- 21
+SELECT specialty FROM student_group INNER JOIN teacher_student_group ON student_group.code =
+        teacher_student_group.group_number WHERE personal_number = (SELECT personal_number FROM
+                teacher WHERE department = 'АСУ');
+-- 22
+CREATE VIEW v2 AS SELECT subject.code FROM subject INNER JOIN teacher_student_group ON
+        subject.code = teacher_student_group.subject_number WHERE
+                group_number = (SELECT code FROM student_group WHERE name = 'АС-8');
+
+SELECT * FROM v2;
+-- 23
+CREATE VIEW v3 AS SELECT DISTINCT group_number FROM teacher_student_group WHERE subject_number IN (SELECT * FROM v2);
+
+SELECT * FROM v3;
+-- 24
+SELECT DISTINCT code FROM student_group WHERE code NOT IN (SELECT * FROM v3);
+-- 25
+SELECT student_group.code FROM student_group WHERE code NOT IN 
+        (SELECT student_group.code FROM student_group INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
+                WHERE tsg.subject_number IN (SELECT subject_number FROM teacher_student_group WHERE personal_number = '430Л'));
+-- 26
+SELECT * FROM (SELECT DISTINCT personal_number FROM teacher_student_group WHERE subject_number != '12П') as first 
+        INNER JOIN (SELECT DISTINCT personal_number FROM teacher_student_group WHERE 
+                group_number = (SELECT code FROM student_group WHERE name = 'Э-15')) as second  ON first.personal_number = second.personal_number;
+        
