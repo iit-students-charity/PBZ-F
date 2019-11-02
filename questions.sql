@@ -90,7 +90,7 @@ SELECT student_group.code FROM student_group WHERE code NOT IN
         (SELECT student_group.code FROM student_group INNER JOIN teacher_student_group tsg ON student_group.code = tsg.group_number
                 WHERE tsg.subject_number IN (SELECT subject_number FROM teacher_student_group WHERE personal_number = '430Л'));
 -- 26
-SELECT * FROM (SELECT DISTINCT personal_number FROM teacher_student_group WHERE subject_number != '12П') as first 
-        INNER JOIN (SELECT DISTINCT personal_number FROM teacher_student_group WHERE 
-                group_number = (SELECT code FROM student_group WHERE name = 'Э-15')) as second  ON first.personal_number = second.personal_number;
-        
+SELECT teacher.personal_number FROM teacher INNER JOIN teacher_student_group tsg ON 
+        teacher.personal_number = tsg.personal_number WHERE tsg.group_number LIKE (SELECT student_group.code
+                FROM student_group WHERE student_group.name LIKE 'Э-15') AND tsg.personal_number NOT IN (SELECT teacher_student_group.personal_number
+                        FROM teacher_student_group WHERE teacher_student_group.subject_number LIKE '12П');
