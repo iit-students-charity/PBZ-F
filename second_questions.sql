@@ -2,7 +2,7 @@
 -- 2
 SELECT * FROM project WHERE city = 'Лондон';
 -- 4
-SELECT * FROM supplier_project_part_number WHERE quantity >= 300 AND quantity <=750;
+SELECT * FROM supplier_project_part_number WHERE quantity BETWEEN 300 AND 750;
 -- 8
 SELECT DISTINCT pppn.supplier_id,
                 pppn.detail_id,
