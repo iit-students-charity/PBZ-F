@@ -55,7 +55,7 @@ SELECT * FROM subject WHERE subject.code NOT IN (SELECT DISTINCT tsg.subject_num
 -- 17
 SELECT teacher.* FROM teacher
     INNER JOIN teacher_student_group l2s on teacher.personal_number = l2s.personal_number
-        WHERE teacher.position LIKE 'Доцент' AND (l2s.group_number LIKE '3Г' OR l2s.group_number LIKE '8Г');
+        WHERE teacher.position = 'Доцент' AND (l2s.group_number = '3Г' OR l2s.group_number = '8Г');
 -- 18
 SELECT tsg.subject_number,
        tsg.personal_number,
@@ -64,13 +64,14 @@ SELECT tsg.subject_number,
 -- 19
 SELECT DISTINCT student_group.code FROM teacher INNER JOIN student_group ON teacher.specialty LIKE (SELECT concat('%', student_group.specialty, '%'));
 -- 20
-SELECT DISTINCT teacher.personal_number FROM teacher INNER JOIN teacher_student_group l2s 
-    ON teacher.personal_number = l2s.personal_number WHERE l2s.subject_number IN (SELECT subject.code
-        FROM subject INNER JOIN student_group ON student_group.specialty = subject.specialty) AND department = 'ЭВМ';
+SELECT DISTINCT tsg.personal_number FROM teacher_student_group tsg INNER JOIN subject s ON
+    tsg.subject_number = s.code INNER JOIN student_group st ON tsg.group_number = st.code
+        INNER JOIN teacher t ON tsg.personal_number = t.personal_number
+            WHERE t.department = 'ЭВМ' AND s.specialty = st.specialty;
 -- 21
-SELECT DISTINCT specialty FROM student_group INNER JOIN teacher_student_group ON student_group.code =
-        teacher_student_group.group_number WHERE personal_number = (SELECT personal_number FROM
-                teacher WHERE department = 'АСУ');
+SELECT DISTINCT st.specialty FROM student_group st INNER JOIN teacher_student_group tsg ON
+    st.code = tsg.group_number INNER JOIN teacher t ON tsg.personal_number = t.personal_number
+        WHERE t.department = 'АСУ';
 -- 22
 CREATE VIEW v2 AS SELECT subject.code FROM subject INNER JOIN teacher_student_group ON
         subject.code = teacher_student_group.subject_number WHERE

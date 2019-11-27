@@ -16,9 +16,8 @@ SELECT DISTINCT first.city, second.city FROM
         (SELECT * FROM project INNER JOIN supplier_project_part_number ON project.id = supplier_project_part_number.project_id) as second ON first.supplier_id = second.supplier_id;
         -- refactor
 -- 13
-SELECT project.id FROM project INNER JOIN supplier_project_part_number pppn ON project.id = pppn.project_id
-    WHERE project.city NOT IN (SELECT city FROM supplier INNER JOIN supplier_project_part_number spppn ON
-        supplier.id = pppn.supplier_id WHERE spppn.project_id = supplier.id);
+SELECT DISTINCT p.id FROM project p INNER JOIN supplier_project_part_number pppn ON p.id = pppn.project_id 
+    INNER JOIN supplier s ON pppn.supplier_id = s.id WHERE s.id != pppn.project_id;
 -- 14
 SELECT DISTINCT fpppn.detail_id, spppn.detail_id FROM supplier_project_part_number fpppn INNER JOIN 
     supplier_project_part_number spppn ON fpppn.supplier_id = spppn.supplier_id WHERE 
